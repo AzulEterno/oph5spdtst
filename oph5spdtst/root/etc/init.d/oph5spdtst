@@ -1,0 +1,44 @@
+#!/bin/sh /etc/rc.common
+
+
+
+START=99
+STOP=10
+
+SPDTST_FILE_DIR="/tmp/tmp"
+SPDTST_FILE_PATH="$SPDTST_FILE_DIR/spdtst_payload.bin"
+
+FILE_SRC_LINK_PATH="/www/luci-static/resources/oph5spdtst/downloading"
+
+FILE_SIZE="5M"
+
+
+delete_spdtst_files() {
+	if [ -f "$SPDTST_FILE_PATH" ]; then
+        rm "$SPDTST_FILE_PATH"
+    fi
+}
+
+init_spdtst_files() {
+	
+    if [ ! -f "$SPDTST_FILE_PATH" ]; then
+        if [ ! -d "$SPDTST_FILE_DIR" ]; then
+            mkdir -p "$SPDTST_FILE_DIR"
+        fi
+        dd if=/dev/urandom of="$SPDTST_FILE_PATH" bs="$FILE_SIZE" count=1
+    fi
+
+    if [ ! -f "$FILE_SRC_LINK_PATH" ]; then
+        ln -s "$SPDTST_FILE_PATH" "$FILE_SRC_LINK_PATH"
+    fi
+}
+
+
+start() {
+	init_spdtst_files
+}
+
+stop() {
+	delete_spdtst_files
+}
+
