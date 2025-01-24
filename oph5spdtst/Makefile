@@ -11,7 +11,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/$(PKG_NAME)/config
 
 
-	config PACKAGE_luci-light
+	config PACKAGE_luci
 	default y if PACKAGE_$(PKG_NAME)
 	
 endef
@@ -21,7 +21,7 @@ define Package/$(PKG_NAME)
 	CATEGORY:=Network
 	TITLE:=Open HTML5 speed test in OpenWRT
 	PKGARCH:=all
-	DEPENDS:=+luci +luci-light
+	DEPENDS:=+luci
 	MAINTAINER:=AzulEterno
 endef
 

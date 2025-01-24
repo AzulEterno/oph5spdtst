@@ -18,8 +18,20 @@ Which does not play nicely with limited space for OpenWRT Devices.
 3. Takes 5MB runtime memory to store temp download file.
 4. Use http may achieve better performance due to no encryption cost.
 
+## Usage
 
 
+```
+# First Enter your openwrt compile root folder
+
+git clone https://github.com/AzulEterno/oph5spdtst.git package/oph5spdtst
+
+# Then check luci-app-oph5spdtst
+
+```
+## Image
+
+![Demo Pic](<img/屏幕截图 2025-01-24 171258.png>)
 
 
 
