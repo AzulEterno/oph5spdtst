@@ -25,12 +25,38 @@ init_spdtst_files() {
         if [ ! -d "$SPDTST_FILE_DIR" ]; then
             mkdir -p "$SPDTST_FILE_DIR"
         fi
-        dd if=/dev/urandom of="$SPDTST_FILE_PATH" bs="$FILE_SIZE" count=1
+
+        # Test if we want to store it in flash memory directly, if true we don't need to create a file every time we boot
+        FLASH_STORE=$(uci get oph5spdtst.settings.use_flash_stored_payload)
+
+        if [ "$FLASH_STORE" = "1" ]; then
+            if [ -L "$FILE_SRC_LINK_PATH" ]; then
+                rm "$FILE_SRC_LINK_PATH"
+            fi
+
+            if [ ! -f "$FILE_SRC_LINK_PATH" ]; then
+                dd if=/dev/urandom of="$FILE_SRC_LINK_PATH" bs="$FILE_SIZE" count=1
+            fi
+
+
+        else
+            dd if=/dev/urandom of="$SPDTST_FILE_PATH" bs="$FILE_SIZE" count=1
+
+
+            if [ ! -f "$FILE_SRC_LINK_PATH" || ! -L "$FILE_SRC_LINK_PATH" ]; then
+
+                if [ -f "$FILE_SRC_LINK_PATH" ]; then
+                    rm "$FILE_SRC_LINK_PATH"
+                fi
+
+                ln -s "$SPDTST_FILE_PATH" "$FILE_SRC_LINK_PATH"
+            fi
+        fi
+
+
     fi
 
-    if [ ! -f "$FILE_SRC_LINK_PATH" ]; then
-        ln -s "$SPDTST_FILE_PATH" "$FILE_SRC_LINK_PATH"
-    fi
+    
 }
 
 

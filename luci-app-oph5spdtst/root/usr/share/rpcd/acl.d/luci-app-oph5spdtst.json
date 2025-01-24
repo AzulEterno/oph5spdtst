@@ -1,0 +1,11 @@
+{
+    "luci-app-oph5spdtst": {
+        "description": "Grant UCI access for OPH5 SPD Test",
+		"read": {
+			"uci": [ "oph5spdtst" ]
+		},
+		"write": {
+			"uci": [ "oph5spdtst" ]
+		}
+    }
+}

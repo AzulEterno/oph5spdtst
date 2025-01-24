@@ -1,0 +1,38 @@
+<!--
+File: framed_app.htm
+Relative Path: \
+File Created: Friday, 24th January 2025 14:37:56
+Author: Azuroso
+-----
+Last Modified: Friday, 24th January 2025 14:37:56
+-----
+Copyright 2025 Azuroso
+-->
+
+<%+header%>
+
+
+<fieldset class="cbi-section">
+    <% if luci.sys then %>
+        <h2><%=translate("OPH5 SPD Test") %></h2>
+        <iframe src="/luci-static/resources/oph5spdtst/" width="100%" height="500px" frameborder="0"></iframe>
+    <% else %>
+        <p><%=translate("Unable to load the content. Please check your oph5spdtst package installation.") %></p>
+    <% end %>
+
+    <!-- Add the new block for "Home Repo" -->
+    <p>
+        <a href="https://github.com/AzulEterno/oph5spdtst" target="_blank" style="display: flex; gap: 20px; align-items: center; font-weight: bold;">
+            <%=translate("Project Repository") %>
+        </a>
+
+        <!-- Display Author's Name -->
+        <span>
+            <%=translate("Author: AzulEterno") %>
+        </span>
+    </p>
+</fieldset>
+
+<script type="text/javascript" src="<%=resource%>/cbi.js?v=1.0"></script>
+
+<%+footer%>

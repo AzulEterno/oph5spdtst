@@ -1,0 +1,7 @@
+
+config oph5spdtst 'settings'
+	option enabled '1'
+	option use_flash_stored_payload '0'
+
+
+
