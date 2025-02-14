@@ -7,8 +7,8 @@
 
 
 ## Motivation
-Current web speed test has a lots of limitations, like has to use another port or needs to consume a lots of memory.
-Which does not play nicely with limited space for OpenWRT Devices.
+Current web speed test has a lots of limitations, like being forced to use another port or consuming a lots of memory.
+Which does not play nicely with space-limited for OpenWRT Devices.
 
 
 ## Note
