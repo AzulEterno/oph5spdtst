@@ -142,23 +142,34 @@
     // Allow user to select a different server to run a test  
     // Pass "Host" or "H" ad a  URL Parameter.
     // Accept only valid HTTP URLs like "http://192.168.1.10:3000" or "https://yourHost.com"
-        var selectServer = true;
+        var selectServer = false;
 
     // Start a test Automatically without pressing the start button
     // You can Delay the test for 'n' seconds by passing any number as a value for Run Keyword. e.g.: "Run=10" or "R=10" to delay the test by 10 Seconds.
     // Pass "Run" or "R" as a URL Parameter to start a test instantly.
-        var enableRun = true;
+        var enableRun = false;
 
     // "Run" will not work if you are already using 'selectTest' "Test" or "T" Keyword.
 
  
 function ostOnload() {
-      console.log("OpenSpeedTest.com V2.5.4 Loaded!")
-      console.log("Now Press the Start Button or HIT Enter.")
-      console.log("The secret to living happy is giving happiness. Have a wonderful day.")
-      
+    console.log("OpenSpeedTest.com V2.5.4 Loaded!");
+    console.log("Now Press the Start Button or HIT Enter.");
+    //console.log("The secret to living happy is giving happiness. Have a wonderful day.");
+
+    // 🧩 Add your debug log here
+    if (window.OPH5SPDTEST) {
+      console.log("[oph5spdtst] Loaded LuCI config:", window.OPH5SPDTEST);
+    } else {
+      console.warn("[oph5spdtst] window.OPH5SPDTEST not found. Did config.js load?");
     }
-  
+
+    // Example: print individual args
+    const cfg = window.OPH5SPDTEST || {};
+    console.log("[oph5spdtst] pingSamples =", cfg.pingSamples,
+                "dlThreads =", cfg.dlThreads,
+                "ulThreads =", cfg.ulThreads);
+  }
   var openChannel = "dev";
 
   </script>
