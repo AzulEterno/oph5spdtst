@@ -1,5 +1,7 @@
 local m = Map("oph5spdtst", translate("OPH5 SPD Test"))
 
+m.template = "oph5spdtst/settings"
+
 local s = m:section(TypedSection, "oph5spdtst", translate("Speed Test Settings"))
 
 s.anonymous = true

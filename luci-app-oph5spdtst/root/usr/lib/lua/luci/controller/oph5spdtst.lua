@@ -14,12 +14,13 @@ module("luci.controller.oph5spdtst", package.seeall)
 local http = require "luci.http"
 local json = require "luci.jsonc"
 local uci = require "luci.model.uci"
+local dispatcher = require "luci.dispatcher"
 
 function index()
     if not nixio.fs.access("/etc/config/oph5spdtst") then
         return
     end
-    local root = entry({"admin", "network", "oph5spdtst"}, alias("admin", "network", "oph5spdtst", "test"), _("OPH5 SPD Test"), 60)
+    local root = entry({"admin", "network", "oph5spdtst"}, call("redirect_to_test"), _("OPH5 SPD Test"), 60)
     root.dependent = false
     root.subindex = true
 
@@ -37,6 +38,10 @@ function index()
     config.leaf = true
     config.dependent = false
     config.acl_depends = { "luci-app-oph5spdtst" }
+end
+
+function redirect_to_test()
+    http.redirect(dispatcher.build_url("admin", "network", "oph5spdtst", "test"))
 end
 
 local function uci_flag_to_bool(value)

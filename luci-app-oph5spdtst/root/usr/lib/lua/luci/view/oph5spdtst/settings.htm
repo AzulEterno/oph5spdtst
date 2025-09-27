@@ -1,0 +1,29 @@
+<%+header%>
+
+<%
+    local dispatcher = require("luci.dispatcher")
+
+    local test_url = dispatcher.build_url("admin", "network", "oph5spdtst", "test")
+    local settings_url = dispatcher.build_url("admin", "network", "oph5spdtst", "settings")
+    local request_path = dispatcher.context.requestpath or {}
+    local active_tab = request_path[#request_path] or "test"
+    if active_tab ~= "settings" then
+        active_tab = "test"
+    end
+    local is_test_tab = active_tab == "test"
+    local is_settings_tab = active_tab == "settings"
+%>
+
+<ul class="cbi-tabmenu">
+    <li class="<%= is_test_tab and "cbi-tab-active" or "cbi-tab" %>">
+        <a href="<%=test_url%>"><%=translate("Test") %></a>
+    </li>
+    <li class="<%= is_settings_tab and "cbi-tab-active" or "cbi-tab" %>">
+        <a href="<%=settings_url%>"><%=translate("Settings") %></a>
+    </li>
+</ul>
+
+<%+cbi/map%>
+
+<%+footer%>
+
