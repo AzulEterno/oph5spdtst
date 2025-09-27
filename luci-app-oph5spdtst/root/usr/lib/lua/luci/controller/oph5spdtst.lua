@@ -19,9 +19,10 @@ function index()
     if not nixio.fs.access("/etc/config/oph5spdtst") then
         return
     end
-
-    local root = entry({"admin", "network", "oph5spdtst"}, firstchild(), _("OPH5 SPD Test"), 60)
+    local root = entry({"admin", "network", "oph5spdtst"}, alias("admin", "network", "oph5spdtst", "test"), _("OPH5 SPD Test"), 60)
     root.dependent = false
+    root.subindex = true
+
     root.acl_depends = { "luci-app-oph5spdtst" }
 
     local test = entry({"admin", "network", "oph5spdtst", "test"}, template("oph5spdtst/main"), _("Speed Test"), 10)
