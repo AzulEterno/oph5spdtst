@@ -22,6 +22,10 @@ Copyright 2025 Azuroso
     local settings_url = dispatcher.build_url("admin", "network", "oph5spdtst", "settings")
     local request_path = dispatcher.context.requestpath or {}
     local active_tab = request_path[#request_path] or "test"
+    if active_tab ~= "settings" then
+        active_tab = "test"
+    end
+
     local is_test_tab = active_tab == "test"
     local is_settings_tab = active_tab == "settings"
 %>
