@@ -1,6 +1,7 @@
 local m = Map("oph5spdtst", translate("OPH5 SPD Test"))
 
 local s = m:section(TypedSection, "oph5spdtst", translate("Speed Test Settings"))
+
 s.anonymous = true
 
 local enabled = s:option(Flag, "enabled", translate("Enable speed test"), translate("Disable to hide the embedded Speed Test interface."))
