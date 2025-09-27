@@ -17,6 +17,7 @@ Which does not play nicely with space-limited for OpenWRT Devices.
 2. Use nginx to achieve best result.
 3. Takes 5MB runtime memory to store temp download file.
 4. Use http may achieve better performance due to no encryption cost.
+5. Tune the LuCI "Settings" tab to adjust ping samples, timeouts, thread counts and test durations without touching the upstream assets.
 
 ## Usage
 

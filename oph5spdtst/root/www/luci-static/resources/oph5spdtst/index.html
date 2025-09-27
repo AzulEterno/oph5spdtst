@@ -25,6 +25,7 @@
   <meta name="theme-color" content="#ffffff">
 </head>
 <body>
+  <script src="/cgi-bin/luci/admin/network/oph5spdtst/config.js"></script>
   <script type="text/javascript">
 /*
      Official Website : https://OpenSpeedTest.COM | Email: support@openspeedtest.com
@@ -49,13 +50,34 @@
      If you have any Questions, ideas or Comments Please Send it via -> https://go.openspeedtest.com/SendMessage
 */
 
-     // Add or Remove Server --> Automatically choose the one with the least latency
+    var oph5Config = window.OPH5SPDTEST || {};
+
+    function numberOrDefault(value, defaultValue) {
+      var num = Number(value);
+      if (!isFinite(num)) {
+        return defaultValue;
+      }
+      return num;
+    }
+
+    function clampNumber(value, min, max, defaultValue) {
+      var num = numberOrDefault(value, defaultValue);
+      if (typeof min === "number" && num < min) {
+        num = min;
+      }
+      if (typeof max === "number" && num > max) {
+        num = max;
+      }
+      return num;
+    }
+
+    // Add or Remove Server --> Automatically choose the one with the least latency
     var openSpeedTestServerList = [
         {"ServerName":"Home", "Download":"downloading", "Upload":"upload", "ServerIcon":"DefaultIcon"}
       ];
-          
+
     // Send pings 'pingSamples' times to each Server URL.
-        var pingSamples = 10;
+        var pingSamples = clampNumber(oph5Config.pingSamples, 1, 100, 10);
 
     // 50% samples(Least)/length 1=100% 0.1 = 10%
         var jitterFinalSample = 0.5; 
@@ -66,7 +88,7 @@
     // If Server has not responded within 5 Seconds for any requests we send ('pingSamples' times)
     // We will show Network Error. You can change the limit here.
     // In milliseconds, if you need to set 6 seconds. Change the value to 6000.
-        var pingTimeOut = 5000; 
+        var pingTimeOut = clampNumber(oph5Config.pingTimeout, 1, 60000, 5000);
 
     // Set a PingTimeout dynamically by passing "Out" or "O" as a URL Parameter    
         var setPingTimeout = true;
@@ -78,7 +100,7 @@
         var pingFile = "Upload";
 
     // The amount of garbage data sent to the server in Mb, 30 = 30Mb
-        var ulDataSize = 5;
+        var ulDataSize = clampNumber(oph5Config.ulDataSize, 1, 200, 5);
 
     // Don't touch it
         var ulDelay = 300;
@@ -93,13 +115,13 @@
         var enableClean = true;
 
     // Minimum 12 Seconds is Expected. 
-        var dlDuration = 12;
-        var ulDuration = 12;
+        var dlDuration = clampNumber(oph5Config.dlDuration, 5, 600, 12);
+        var ulDuration = clampNumber(oph5Config.ulDuration, 5, 600, 12);
 
     // 6 is the common limit found on most browsers.
     // Choose  Number for parallel HTTP connections to Server | Default is 6 
-        var dlThreads = 6;
-        var ulThreads = 6;
+        var dlThreads = clampNumber(oph5Config.dlThreads, 1, 32, 6);
+        var ulThreads = clampNumber(oph5Config.ulThreads, 1, 32, 6);
 
     // Allow user to Change default limit of 6 parallel HTTP connections to Server  | Accept values above 1 and max 32
     // pass "XHR" or "X" as a URL Parameter

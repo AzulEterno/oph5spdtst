@@ -12,10 +12,17 @@ Copyright 2025 Azuroso
 <%+header%>
 
 
+<%
+    local uci = require("luci.model.uci").cursor()
+    local enabled = uci:get("oph5spdtst", "settings", "enabled") ~= "0"
+%>
+
 <fieldset class="cbi-section">
-    <% if luci.sys then %>
-        <h2><%=translate("OPH5 SPD Test") %></h2>
+    <h2><%=translate("OPH5 SPD Test") %></h2>
+    <% if luci.sys and enabled then %>
         <iframe src="/luci-static/resources/oph5spdtst/" width="100%" height="500px" frameborder="0"></iframe>
+    <% elseif not enabled then %>
+        <p><%=translate("The speed test interface is currently disabled. Enable it in the settings tab.") %></p>
     <% else %>
         <p><%=translate("Unable to load the content. Please check your oph5spdtst package installation.") %></p>
     <% end %>
