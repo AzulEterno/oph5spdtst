@@ -14,9 +14,9 @@ Copyright 2025 Azuroso
 
 <%
     local uci = require("luci.model.uci").cursor()
-    local dispatcher = require("luci.dispatcher")
+
     local enabled = uci:get("oph5spdtst", "settings", "enabled") ~= "0"
-    local settings_url = dispatcher.build_url("admin", "network", "oph5spdtst", "settings")
+
 %>
 
 <fieldset class="cbi-section">
