@@ -1,0 +1,23 @@
+<%+cbi/header%>
+
+<%
+    local dispatcher = require("luci.dispatcher")
+
+    local test_url = dispatcher.build_url("admin/network/oph5spdtst/test")
+    local settings_url = dispatcher.build_url("admin/network/oph5spdtst/settings")
+%>
+
+<div class="cbi-section">
+    <ul class="nav nav-tabs" style="margin-bottom: 1.5em;">
+        <li>
+            <a href="<%= test_url %>"><%= translate("Test") %></a>
+        </li>
+        <li class="active">
+            <a href="<%= settings_url %>"><%= translate("Settings") %></a>
+        </li>
+    </ul>
+</div>
+
+<%+cbi/map%>
+
+<%+cbi/footer%>
