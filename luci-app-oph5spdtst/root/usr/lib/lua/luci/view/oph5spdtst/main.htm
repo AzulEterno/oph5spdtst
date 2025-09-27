@@ -13,23 +13,25 @@ Copyright 2025 Azuroso
 
 
 <%
-    local uci = require("luci.model.uci").cursor()
-    local dispatcher = require("luci.dispatcher")
+  local http = require "luci.http"
+  local dsp  = require "luci.dispatcher"
+  local uci  = require("luci.model.uci").cursor()
 
-    local enabled = uci:get("oph5spdtst", "settings", "enabled") ~= "0"
+  -- Determine current leaf from actual URL
+  local path = http.getenv("PATH_INFO") or ""          -- e.g. /admin/network/oph5spdtst/test
+  local leaf = path:match("([^/]+)/?$") or ""          -- "test" or "settings"
 
-    local test_url = dispatcher.build_url("admin", "network", "oph5spdtst", "test")
-    local settings_url = dispatcher.build_url("admin", "network", "oph5spdtst", "settings")
-    local request_path = dispatcher.context.requestpath or {}
-    local active_tab = request_path[#request_path] or "test"
-    if active_tab ~= "settings" then
-        active_tab = "test"
-    end
+  local test_url     = dsp.build_url("admin","network","oph5spdtst","test")
+  local settings_url = dsp.build_url("admin","network","oph5spdtst","settings")
 
-    local is_test_tab = active_tab == "test"
-    local is_settings_tab = active_tab == "settings"
+  local is_test_tab     = (leaf == "test")
+  local is_settings_tab = (leaf == "settings")
+
+  local enabled = uci:get("oph5spdtst", "settings", "enabled") ~= "0"
 %>
 
+
+<!-- 
 <ul class="cbi-tabmenu">
     <li class="<%= is_test_tab and "cbi-tab-active" or "cbi-tab" %>">
         <a href="<%=test_url%>"><%=translate("Test") %></a>
@@ -37,7 +39,7 @@ Copyright 2025 Azuroso
     <li class="<%= is_settings_tab and "cbi-tab-active" or "cbi-tab" %>">
         <a href="<%=settings_url%>"><%=translate("Settings") %></a>
     </li>
-</ul>
+</ul> -->
 
 <fieldset class="cbi-section">
     <h2><%=translate("OPH5 SPD Test") %></h2>
@@ -61,7 +63,5 @@ Copyright 2025 Azuroso
         </span>
     </p>
 </fieldset>
-
-<script type="text/javascript" src="<%=resource%>/cbi.js?v=1.0"></script>
 
 <%+footer%>

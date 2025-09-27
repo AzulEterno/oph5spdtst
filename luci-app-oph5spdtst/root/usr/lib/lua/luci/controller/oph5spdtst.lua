@@ -17,31 +17,20 @@ local uci = require "luci.model.uci"
 local dispatcher = require "luci.dispatcher"
 
 function index()
-    if not nixio.fs.access("/etc/config/oph5spdtst") then
-        return
-    end
-    local root = entry({"admin", "network", "oph5spdtst"}, call("redirect_to_test"), _("OPH5 SPD Test"), 60)
-    root.dependent = false
-    root.subindex = true
+  if not nixio.fs.access("/etc/config/oph5spdtst") then return end
 
-    root.acl_depends = { "luci-app-oph5spdtst" }
+  entry({"admin","network","oph5spdtst"}, call("redirect_to_test"), _("OPH5 SPD Test"), 60)
 
-    local test = entry({"admin", "network", "oph5spdtst", "test"}, template("oph5spdtst/main"), _("Speed Test"), 10)
-    test.leaf = true
-    test.acl_depends = { "luci-app-oph5spdtst" }
+  entry({"admin","network","oph5spdtst","test"},
+        template("oph5spdtst/main"), _("Speed Test"), 10).leaf = true
 
-    local settings = entry({"admin", "network", "oph5spdtst", "settings"}, cbi("oph5spdtst/settings"), _("Settings"), 20)
-    settings.leaf = true
-    settings.acl_depends = { "luci-app-oph5spdtst" }
-
-    local config = entry({"admin", "network", "oph5spdtst", "config.js"}, call("action_config_js"), nil)
-    config.leaf = true
-    config.dependent = false
-    config.acl_depends = { "luci-app-oph5spdtst" }
+  entry({"admin","network","oph5spdtst","settings"},
+        cbi("oph5spdtst/settings"), _("Settings"), 20).leaf = true
 end
 
 function redirect_to_test()
-    http.redirect(dispatcher.build_url("admin", "network", "oph5spdtst", "test"))
+  local dsp = require "luci.dispatcher"
+  luci.http.redirect(dsp.build_url("admin","network","oph5spdtst","test"))
 end
 
 local function uci_flag_to_bool(value)
