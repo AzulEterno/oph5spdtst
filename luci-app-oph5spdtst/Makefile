@@ -42,6 +42,7 @@ define Build/Prepare
 
 	chmod -R 0644 $(PKG_BUILD_DIR)/root/usr/lib/lua/luci/controller/*
 	chmod -R 0644 $(PKG_BUILD_DIR)/root/usr/lib/lua/luci/view/oph5spdtst/*
+	chmod -R 0644 $(PKG_BUILD_DIR)/root/usr/lib/lua/luci/model/cbi/oph5spdtst/*
 
 	chmod -R 0644 $(PKG_BUILD_DIR)/root/usr/share/rpcd/acl.d/*
 
