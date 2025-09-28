@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-oph5spdtst
-PKG_VERSION:=0.1.0
+PKG_VERSION:=0.2.0
 PKG_MAINTAINER:=AzulEterno <https://github.com/AzulEterno/oph5spdtst>
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
