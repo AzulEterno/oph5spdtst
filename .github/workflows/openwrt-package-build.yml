@@ -1,0 +1,70 @@
+name: OpenWrt package build
+
+on:
+  push:
+    paths:
+      - '.github/workflows/openwrt-package-build.yml'
+      - 'packaging/**'
+      - 'src/**'
+  pull_request:
+    paths:
+      - '.github/workflows/openwrt-package-build.yml'
+      - 'packaging/**'
+      - 'src/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: openwrt-package-build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build ${{ matrix.arch }} packages
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        arch:
+          - x86_64
+          - aarch64_generic
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Prepare SDK feed
+        run: |
+          rm -rf .ci-feed
+          mkdir -p .ci-feed
+
+          cp -a packaging/packages/oph5spdtst .ci-feed/oph5spdtst
+          cp -a src .ci-feed/oph5spdtst/src
+          cp -a packaging/luci/luci-app-oph5spdtst .ci-feed/luci-app-oph5spdtst
+
+          # ponytail: local source staging until PKG_SOURCE/PKG_HASH is published.
+          sed -i 's#$(CURDIR)/../../../src#$(CURDIR)/src#' \
+            .ci-feed/oph5spdtst/Makefile
+
+      - name: Build with the OpenWrt SDK
+        uses: openwrt/gh-action-sdk@v11
+        env:
+          ARCH: ${{ matrix.arch }}
+          FEED_DIR: ${{ github.workspace }}/.ci-feed
+          FEEDNAME: oph5spdtst_ci
+          PACKAGES: oph5spdtst luci-app-oph5spdtst
+          NO_SHFMT_CHECK: 1
+          V: s
+
+      - name: Store packages and logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.arch }}-packages
+          if-no-files-found: warn
+          path: |
+            bin/
+            logs/
