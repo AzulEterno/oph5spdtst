@@ -1,0 +1,14 @@
+# Generated cloud and local build output
+/artifacts/
+/bin/
+/build/
+/build_dir/
+/dl/
+/logs/
+/staging_dir/
+/tmp/
+/.ci-feed/
+
+# OpenWrt package files generated outside artifacts/
+*.apk
+*.ipk
