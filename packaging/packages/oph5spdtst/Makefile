@@ -3,8 +3,8 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=oph5spdtst
 PKG_VERSION:=0.2.0
 PKG_RELEASE:=1
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://github.com/AzulEterno/oph5spdtst/archive/refs/tags/v$(PKG_VERSION).tar.gz
+PKG_SOURCE:=v$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://github.com/AzulEterno/oph5spdtst/archive/refs/tags/
 PKG_HASH:=d6397604297db9d937dc4d32b1267cf2a5203ade642afc988ff6ec35b226caf5
 PKG_MAINTAINER:=AzulEterno <jay2236419527@gmail.com>
 PKG_LICENSE:=Apache-2.0 MIT
