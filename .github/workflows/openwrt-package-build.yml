@@ -42,12 +42,7 @@ jobs:
           mkdir -p .ci-feed
 
           cp -a packaging/packages/oph5spdtst .ci-feed/oph5spdtst
-          cp -a src .ci-feed/oph5spdtst/src
           cp -a packaging/luci/luci-app-oph5spdtst .ci-feed/luci-app-oph5spdtst
-
-          # ponytail: local source staging until PKG_SOURCE/PKG_HASH is published.
-          sed -i 's#$(CURDIR)/../../../src#$(CURDIR)/src#' \
-            .ci-feed/oph5spdtst/Makefile
 
       - name: Build with the OpenWrt SDK
         uses: openwrt/gh-action-sdk@v11
