@@ -22,15 +22,25 @@ concurrency:
 
 jobs:
   build:
-    name: Build ${{ matrix.arch }} packages
+    name: Build ${{ matrix.format }} ${{ matrix.arch }} packages
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        arch:
-          - x86_64
-          - aarch64_generic
+        include:
+          - arch: x86_64
+            sdk_arch: x86_64
+            format: apk
+          - arch: aarch64_generic
+            sdk_arch: aarch64_generic
+            format: apk
+          - arch: x86_64
+            sdk_arch: x86_64-24.10.8
+            format: ipk
+          - arch: aarch64_generic
+            sdk_arch: aarch64_generic-24.10.8
+            format: ipk
 
     steps:
       - name: Check out source
@@ -47,7 +57,7 @@ jobs:
       - name: Build with the OpenWrt SDK
         uses: openwrt/gh-action-sdk@v11
         env:
-          ARCH: ${{ matrix.arch }}
+          ARCH: ${{ matrix.sdk_arch }}
           FEED_DIR: ${{ github.workspace }}/.ci-feed
           FEEDNAME: oph5spdtst_ci
           PACKAGES: oph5spdtst luci-app-oph5spdtst
@@ -58,7 +68,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ matrix.arch }}-packages
+          name: ${{ matrix.format }}-${{ matrix.arch }}-packages
           if-no-files-found: warn
           path: |
             bin/
