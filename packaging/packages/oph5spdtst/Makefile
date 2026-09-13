@@ -3,7 +3,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=oph5spdtst
 PKG_VERSION:=0.2.0
 PKG_RELEASE:=1
-PKG_MAINTAINER:=AzulEterno
+PKG_MAINTAINER:=AzulEterno <jay2236419527@gmail.com>
 PKG_LICENSE:=Apache-2.0 MIT
 PKG_LICENSE_FILES:=src/LICENSE src/www/luci-static/resources/oph5spdtst/License.md
 
@@ -32,6 +32,18 @@ endef
 
 define Package/oph5spdtst/conffiles
 /etc/config/oph5spdtst
+endef
+
+define Package/oph5spdtst/postrm
+#!/bin/sh
+
+if [ -z "$${IPKG_INSTROOT}" ]; then
+	rm -f /tmp/oph5spdtst/payload.bin /tmp/oph5spdtst/payload.bin.tmp
+	rm -f /www/luci-static/resources/oph5spdtst/downloading \
+	/www/luci-static/resources/oph5spdtst/downloading.tmp
+	rmdir /tmp/oph5spdtst 2>/dev/null || true
+fi
+exit 0
 endef
 
 define Package/oph5spdtst/install

@@ -3,50 +3,86 @@
 START=99
 STOP=10
 
-SPDTST_FILE_DIR="/tmp/tmp"
-SPDTST_FILE_PATH="$SPDTST_FILE_DIR/spdtst_payload.bin"
+SPDTST_FILE_DIR="/tmp/oph5spdtst"
+SPDTST_FILE_PATH="$SPDTST_FILE_DIR/payload.bin"
+SPDTST_TMP_PATH="$SPDTST_FILE_PATH.tmp"
 FILE_SRC_LINK_PATH="/www/luci-static/resources/oph5spdtst/downloading"
+FILE_SRC_TMP_PATH="$FILE_SRC_LINK_PATH.tmp"
+FILE_SRC_DIR="/www/luci-static/resources/oph5spdtst"
 FILE_SIZE="5M"
 
-delete_spdtst_files() {
-	if [ -f "$SPDTST_FILE_PATH" ]; then
-		rm "$SPDTST_FILE_PATH"
-	fi
+load_config() {
+	ENABLED=1
+	FLASH_STORE=0
+
+	config_load oph5spdtst
+	config_get_bool ENABLED settings enabled 1
+	config_get_bool FLASH_STORE settings use_flash_stored_payload 0
 }
 
-init_spdtst_files() {
-	if [ ! -f "$SPDTST_FILE_PATH" ]; then
-		mkdir -p "$SPDTST_FILE_DIR"
+create_payload() {
+	target="$1"
+	tmp="$2"
+	dir="$3"
 
-		# Test if we want to store it in flash memory directly, if true we don't need to create a file every time we boot
-		FLASH_STORE=$(uci get oph5spdtst.settings.use_flash_stored_payload)
+	mkdir -p "$dir" || return 1
+	rm -f "$tmp"
+	dd if=/dev/urandom of="$tmp" bs="$FILE_SIZE" count=1 >/dev/null 2>&1 || {
+		rm -f "$tmp"
+		return 1
+	}
+	mv -f "$tmp" "$target"
+}
 
-		if [ "$FLASH_STORE" = "1" ]; then
-			if [ -L "$FILE_SRC_LINK_PATH" ]; then
-				rm "$FILE_SRC_LINK_PATH"
-			fi
+payload_is_valid() {
+	[ -f "$1" ] && [ "$(wc -c < "$1")" -eq 5242880 ]
+}
 
-			if [ ! -f "$FILE_SRC_LINK_PATH" ]; then
-				dd if=/dev/urandom of="$FILE_SRC_LINK_PATH" bs="$FILE_SIZE" count=1
-			fi
-		else
-			dd if=/dev/urandom of="$SPDTST_FILE_PATH" bs="$FILE_SIZE" count=1
+remove_payloads() {
+	rm -f "$SPDTST_FILE_PATH" "$SPDTST_TMP_PATH"
+	rm -f "$FILE_SRC_LINK_PATH" "$FILE_SRC_TMP_PATH"
+	rmdir "$SPDTST_FILE_DIR" 2>/dev/null || true
+}
 
-			if [ ! -f "$FILE_SRC_LINK_PATH" ] || [ ! -L "$FILE_SRC_LINK_PATH" ]; then
-				if [ -f "$FILE_SRC_LINK_PATH" ]; then
-					rm "$FILE_SRC_LINK_PATH"
-				fi
+use_tmp_payload() {
+	# Replace a flash payload or stale link before creating the tmp-backed link.
+	mkdir -p "$FILE_SRC_DIR" || return 1
+	rm -f "$FILE_SRC_LINK_PATH" "$FILE_SRC_TMP_PATH"
 
-				ln -s "$SPDTST_FILE_PATH" "$FILE_SRC_LINK_PATH"
-			fi
-		fi
+	if ! payload_is_valid "$SPDTST_FILE_PATH"; then
+		create_payload "$SPDTST_FILE_PATH" "$SPDTST_TMP_PATH" "$SPDTST_FILE_DIR" || return 1
+	fi
+
+	ln -s "$SPDTST_FILE_PATH" "$FILE_SRC_LINK_PATH"
+}
+
+use_flash_payload() {
+	# Remove the tmp payload and link; the public path becomes the flash file.
+	rm -f "$SPDTST_FILE_PATH" "$SPDTST_TMP_PATH" "$FILE_SRC_TMP_PATH"
+	if [ -L "$FILE_SRC_LINK_PATH" ]; then
+		rm -f "$FILE_SRC_LINK_PATH"
+	fi
+
+	if ! payload_is_valid "$FILE_SRC_LINK_PATH"; then
+		create_payload "$FILE_SRC_LINK_PATH" "$FILE_SRC_TMP_PATH" "$FILE_SRC_DIR"
 	fi
 }
 
 start() {
-	init_spdtst_files
+	load_config
+
+	if [ "$ENABLED" -ne 1 ]; then
+		remove_payloads
+		return 0
+	fi
+
+	if [ "$FLASH_STORE" -eq 1 ]; then
+		use_flash_payload
+	else
+		use_tmp_payload
+	fi
 }
 
 stop() {
-	delete_spdtst_files
+	remove_payloads
 }

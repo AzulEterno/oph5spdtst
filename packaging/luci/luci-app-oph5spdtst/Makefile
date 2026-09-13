@@ -2,7 +2,9 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-oph5spdtst
 PKG_VERSION:=0.2.0
-PKG_MAINTAINER:=AzulEterno <https://github.com/AzulEterno/oph5spdtst>
+PKG_RELEASE:=1
+PKG_MAINTAINER:=AzulEterno <jay2236419527@gmail.com>
+PKG_LICENSE:=Apache-2.0
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -27,7 +29,7 @@ define Package/$(PKG_NAME)
 	LUCI_DEPENDS:=+oph5spdtst +luci-compat
 	LUCI_PKGARCH:=all
 	DEPENDS:=+oph5spdtst +luci-compat
-	MAINTAINER:=AzulEterno
+	MAINTAINER:=AzulEterno <jay2236419527@gmail.com>
 endef
 
 define Package/$(PKG_NAME)/description
@@ -56,34 +58,6 @@ define Build/Configure
 endef
 
 define Build/Compile
-endef
-
-define Package/$(PKG_NAME)/conffiles
-endef
-
-define Package/$(PKG_NAME)/preinst
-#!/bin/sh
-	
-	exit 0
-endef
-
-define Package/$(PKG_NAME)/postinst
-#!/bin/sh
-	
-	exit 0
-endef
-
-define Package/$(PKG_NAME)/prerm
-#!/bin/sh
-
-	exit 0
-endef
-
-define Package/$(PKG_NAME)/postrm
-#!/bin/sh
-
-	rm -rf /tmp/tmp/spdtst_payload.bin 2>&1
-	exit 0 
 endef
 
 define Package/$(PKG_NAME)/install
