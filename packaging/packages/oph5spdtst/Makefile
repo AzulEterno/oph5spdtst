@@ -5,6 +5,7 @@ PKG_VERSION:=0.2.0
 PKG_RELEASE:=1
 PKG_MAINTAINER:=AzulEterno <jay2236419527@gmail.com>
 PKG_LICENSE:=Apache-2.0
+PKG_LICENSE_FILES:=LICENSE
 
 include $(INCLUDE_DIR)/package.mk
 
