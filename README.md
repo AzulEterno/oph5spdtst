@@ -18,6 +18,8 @@ Which does not play nicely with space-limited for OpenWRT Devices.
 3. Takes 5MB runtime memory to store temp download file.
 4. Use http may achieve better performance due to no encryption cost.
 5. Tune the LuCI "Settings" tab to adjust ping samples, timeouts, thread counts and test durations without touching the upstream assets.
+6. Temporary-payload mode uses a symlink outside the web root. With uhttpd
+   `option no_symlinks '1'`, use flash mode or a web server that permits it.
 
 ## Layout
 
@@ -49,5 +51,4 @@ cp -r oph5spdtst/packaging/luci/luci-app-oph5spdtst package/luci-app-oph5spdtst
 ## Image
 
 ![Demo Pic](<img/屏幕截图 2025-01-24 171258.png>)
-
 

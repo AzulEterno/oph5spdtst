@@ -3,10 +3,15 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=luci-app-oph5spdtst
 PKG_VERSION:=0.2.0
 PKG_RELEASE:=1
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://codeload.github.com/AzulEterno/oph5spdtst/tar.gz/v$(PKG_VERSION)?
+PKG_SOURCE_SUBDIR:=oph5spdtst-$(PKG_VERSION)
+PKG_HASH:=d6397604297db9d937dc4d32b1267cf2a5203ade642afc988ff6ec35b226caf5
 PKG_MAINTAINER:=AzulEterno <jay2236419527@gmail.com>
-PKG_LICENSE:=Apache-2.0
+PKG_LICENSE:=Apache-2.0 MIT
+PKG_LICENSE_FILES:=src/LICENSE src/www/luci-static/resources/oph5spdtst/License.md
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_BUILD_DIR:=$(BUILD_DIR)/oph5spdtst-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -37,6 +42,7 @@ define Package/$(PKG_NAME)/description
 endef
 
 define Build/Prepare
+	$(call Build/Prepare/Default)
 	$(CP) $(CURDIR)/root $(PKG_BUILD_DIR)
 	# $(CP) $(CURDIR)/luasrc $(PKG_BUILD_DIR)
 	
@@ -64,6 +70,10 @@ define Package/$(PKG_NAME)/install
 	# $(INSTALL_DIR) $(1)/usr/lib/lua/luci/i18n
 	# $(INSTALL_DATA) $(PKG_BUILD_DIR)/*.*.lmo $(1)/usr/lib/lua/luci/i18n/
 	$(CP) $(PKG_BUILD_DIR)/root/* $(1)/
+
+	$(INSTALL_DIR) $(1)/www/luci-static/resources/oph5spdtst
+	$(CP) $(PKG_BUILD_DIR)/src/www/luci-static/resources/oph5spdtst/* \
+		$(1)/www/luci-static/resources/oph5spdtst/
 	# $(CP) $(PKG_BUILD_DIR)/luasrc/* $(1)/usr/lib/lua/luci/
 endef
 
